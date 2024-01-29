@@ -10,7 +10,7 @@ function AddProject() {
   const handleClose = () => setShow(false)
   return (
     <>
-      <button onClick={handleShow} className='btn btn-success'><i className='fa-solid fa-plus '></i> Add Project</button>
+      <button onClick={handleShow} className='btn btn-success'><i className='fa-solid fa-plus me-1'></i>Add Project</button>
       <Modal size='lg'
         show={show}
         onHide={handleClose}

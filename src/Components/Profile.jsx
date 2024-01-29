@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react'
 import { Collapse } from 'react-bootstrap'
-import UploadImg from '../assets/Images/UploadImg.png'
+import UploadImg from '../assets/Images/UploadImage.png'
 
 
 function Profile() {
