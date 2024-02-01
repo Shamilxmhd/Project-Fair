@@ -5,9 +5,11 @@ import { Form } from 'react-bootstrap'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { loginAPI, registerAPI } from '../Services/allAPIs';
+import Spinner from 'react-bootstrap/Spinner';
 
 
 function Auth({ insideRegister }) {
+  const [loginStatus,setLoginStatus] = useState(false)
   const navigate = useNavigate()
   const [userData, setUserData] = useState({
     username: '',
@@ -54,10 +56,14 @@ function Auth({ insideRegister }) {
         const result = await loginAPI({ email, password })
         console.log(result);
         if (result.status === 200) {
+          setLoginStatus(true)
           sessionStorage.setItem("username", result.data.existingUser.username)
           sessionStorage.setItem("token", result.data.token)
+         setTimeout(() => {
           setUserData({ email: '', password: '' })
           navigate('/')
+          setLoginStatus(false)
+         }, 2000);
         } else {
           toast.warning(result.response.data)
         }
@@ -102,7 +108,10 @@ function Auth({ insideRegister }) {
                         <p>Already have an Account?Click here to <Link to={'/login'}>Login</Link></p>
                       </div> :
                       <div>
-                        <button onClick={handleLogin} className='btn btn-light mb-2'>Login</button>
+                        <button onClick={handleLogin} className='btn btn-light mb-2'>Login {loginStatus  &&<Spinner animation="border" role="status">
+                          <span className="visually-hidden">Loading...</span>
+                        </Spinner>}</button>
+
                         <p>New User?Click here to <Link to={'/register'}>Register</Link></p>
                       </div>
                   }
