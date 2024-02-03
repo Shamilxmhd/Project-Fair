@@ -3,6 +3,7 @@ import { Modal, Button } from 'react-bootstrap'
 import UploadProject from '../assets/Images/UploadProject.png'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { addProjectAPI } from '../Services/allAPIs';
 
 
 function AddProject() {
@@ -20,19 +21,16 @@ function AddProject() {
   console.log(projectData);
 
 
-  const handleShow = () => setShow(true)
+
   const handleClose = () => {
-    setShow(false)
+    setShow(false);
     setProjectData({
-      title: '',
-      languages: '',
-      overview: '',
-      github: '',
-      website: '',
-      projectImage: ''
+      title: "", languages: "", overview: "", github: "", website: "", projectImage: ""
     })
-    setPreview('')
+    setPreview("")
   }
+  const handleShow = () => setShow(true)
+
 
   useEffect(() => {
     // console.log(projectData.projectImage.type);
@@ -48,25 +46,46 @@ function AddProject() {
     }
   }, [projectData.projectImage])
 
-  const handleAddProject = () => {
+  const handleAddProject = async () => {
     const { title, languages, overview, github, website, projectImage } = projectData
     if (!title || !languages || !overview || !github || !website || !projectImage) {
       toast.info("Please fill the form completely!!!")
     } else {
       //api call - reqBody
       const reqBody = new FormData()
-      reqBody.append('title', title)
-      reqBody.append('languages', languages)
-      reqBody.append('overview', overview)
-      reqBody.append('github', github)
-      reqBody.append('website', website)
-      reqBody.append('projectImage', projectImage)
+      reqBody.append("title", title)
+      reqBody.append("languages", languages)
+      reqBody.append("overview", overview)
+      reqBody.append("github", github)
+      reqBody.append("website", website)
+      reqBody.append("projectImage", projectImage)
       // api call - reqHeader
-      const reqHeader = {
-        "Content-Type": "multipart/form-data"
+      const token = sessionStorage.getItem('token')
+      if (token) {
+        const reqHeader = {
+          "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${token}`
+        }
+        // api call 
+        try {
+          const result = await addProjectAPI(reqBody, reqHeader)
+          console.log(result);
+          if (result.status == 200) {
+            console.log(result.data);
+            handleClose()
+            
+          } else {
+            toast.warning(result.response.data)
+          }
+        } catch (err) {
+          console.log(result);
+        }
+
       }
 
-      // api call
+
+
+
 
 
     }
