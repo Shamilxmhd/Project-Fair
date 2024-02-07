@@ -65,10 +65,12 @@ function AddProject() {
       reqBody.append("projectImage", projectImage)
       // api call - reqHeader
       const token = sessionStorage.getItem('token')
+      console.log(token);
       if (token) {
         const reqHeader = {
           "Content-Type": "multipart/form-data",
           "Authorization": `Bearer ${token}`
+        
         }
         // api call 
         try {
