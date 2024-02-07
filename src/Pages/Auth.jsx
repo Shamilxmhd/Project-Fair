@@ -9,7 +9,7 @@ import Spinner from 'react-bootstrap/Spinner';
 
 
 function Auth({ insideRegister }) {
-  const [loginStatus,setLoginStatus] = useState(false)
+  const [loginStatus, setLoginStatus] = useState(false)
   const navigate = useNavigate()
   const [userData, setUserData] = useState({
     username: '',
@@ -59,11 +59,11 @@ function Auth({ insideRegister }) {
           setLoginStatus(true)
           sessionStorage.setItem("username", result.data.existingUser.username)
           sessionStorage.setItem("token", result.data.token)
-         setTimeout(() => {
-          setUserData({ email: '', password: '' })
-          navigate('/')
-          setLoginStatus(false)
-         }, 2000);
+          setTimeout(() => {
+            setUserData({ email: '', password: '' })
+            navigate('/')
+            setLoginStatus(false)
+          }, 2000);
         } else {
           toast.warning(result.response.data)
         }
@@ -108,7 +108,7 @@ function Auth({ insideRegister }) {
                         <p>Already have an Account?Click here to <Link to={'/login'}>Login</Link></p>
                       </div> :
                       <div>
-                        <button onClick={handleLogin} className='btn btn-light mb-2'>Login {loginStatus  &&<Spinner animation="border" role="status">
+                        <button onClick={handleLogin} className='btn btn-light mb-2'>Login {loginStatus && <Spinner animation="border" role="status">
                           <span className="visually-hidden">Loading...</span>
                         </Spinner>}</button>
 

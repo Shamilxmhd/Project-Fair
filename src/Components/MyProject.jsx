@@ -1,8 +1,35 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import AddProject from './AddProject'
 import EditProject from './EditProject'
+import { getUserProjectAPI } from '../Services/allAPIs'
+import { addProjectResponseContext } from '../Context API/ContextShare'
+
+
 
 function MyProject() {
+  const {addProjectResponse,setAddProjectResponse} = useContext(addProjectResponseContext)
+  const [allProjects, setAllProjects] = useState([])
+
+  const getUserProjects = async () => {
+    const token = sessionStorage.getItem('token')
+    if (token) {
+      const reqHeader = {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${token}`
+      }
+      const result = await getUserProjectAPI(reqHeader)
+      if (result.status === 200) {
+        setAllProjects(result.data)
+      } else {
+        console.log(result);
+      }
+    }
+  }
+  console.log(allProjects);
+  useEffect(() => {
+    getUserProjects()
+  }, [addProjectResponse])
+
   return (
     <div className='card shadow p-3'>
       <div className="d-flex justify-content-between">
@@ -12,14 +39,20 @@ function MyProject() {
         </div>
       </div>
       <div className='mt-4'>
-        <div className="border rounded d-flex align-items-center text-danger justify-content-between mb-3 p-2">
-          <h5>Project Title</h5>
-          <div className="d-flex icons align-items-center">
-            <EditProject />
-            <a target='_blank' className='btn' href="https://github.com/Shamilxmhd"><i style={{ height: '34px' }} className='fa-brands fa-github fa-2x'></i> </a>
-            <button className='btn'><i style={{ height: '34px' }} className='fa-solid fa-trash fa-2x'></i></button>
-          </div>
+        
+       {allProjects.length>0?allProjects.map((project,index)=>(
+        <div key={index} className="border rounded d-flex align-items-center text-danger justify-content-between mb-3 p-2">
+        <h5>{project?.title}</h5>
+        <div className="d-flex icons align-items-center">
+          <EditProject project={project} />
+          <a target='_blank' className='btn' href={project?.github}><i style={{ height: '34px' }} className='fa-brands fa-github fa-2x'></i> </a>
+          <button className='btn'><i style={{ height: '34px' }} className='fa-solid fa-trash fa-2x'></i></button>
         </div>
+      </div>
+       ))
+       :
+        <div className="text-danger fs-4 fw-bolder">No Projects are uploaded yet!!!</div>
+        }
       </div>
     </div>
   )
