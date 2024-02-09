@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import LoginImg from '../assets/Images/loginImg.png'
 import { Form } from 'react-bootstrap'
@@ -6,9 +6,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { loginAPI, registerAPI } from '../Services/allAPIs';
 import Spinner from 'react-bootstrap/Spinner';
+import { tokenAuthenticationContext } from '../Context API/TokenAuth';
 
 
 function Auth({ insideRegister }) {
+  const {isAuthorised,setIsAuthorised} = useContext(tokenAuthenticationContext)
   const [loginStatus, setLoginStatus] = useState(false)
   const navigate = useNavigate()
   const [userData, setUserData] = useState({
@@ -59,6 +61,7 @@ function Auth({ insideRegister }) {
           setLoginStatus(true)
           sessionStorage.setItem("username", result.data.existingUser.username)
           sessionStorage.setItem("token", result.data.token)
+          setIsAuthorised(true)
           setTimeout(() => {
             setUserData({ email: '', password: '' })
             navigate('/')
@@ -72,6 +75,7 @@ function Auth({ insideRegister }) {
       }
     }
   }
+
   return (
     <div style={{ width: '100%', height: '100vh' }} className='d-flex justify-content-center align-items-center'>
       <div className="container w-75">
@@ -111,7 +115,6 @@ function Auth({ insideRegister }) {
                         <button onClick={handleLogin} className='btn btn-light mb-2'>Login {loginStatus && <Spinner animation="border" role="status">
                           <span className="visually-hidden">Loading...</span>
                         </Spinner>}</button>
-
                         <p>New User?Click here to <Link to={'/register'}>Register</Link></p>
                       </div>
                   }

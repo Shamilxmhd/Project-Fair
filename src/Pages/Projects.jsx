@@ -7,6 +7,7 @@ import { getAllProjectAPI } from '../Services/allAPIs'
 
 
 function Projects() {
+  const [searchKey, setSearchKey] = useState('')
   const [allProjects, setAllProjects] = useState([])
 
   const getAllProjects = async () => {
@@ -16,9 +17,10 @@ function Projects() {
         'Content-Type': 'multipart/form-data',
         'Authorization': `Bearer ${token}`
       }
-      const result = await getAllProjectAPI(reqHeader)
+      const result = await getAllProjectAPI(searchKey,reqHeader)
       if (result.status === 200) {
         setAllProjects(result.data)
+
       } else {
         console.log(result);
       }
@@ -27,21 +29,21 @@ function Projects() {
   console.log(allProjects);
   useEffect(() => {
     getAllProjects()
-  }, [])
+  }, [searchKey])
   return (
     <>
       <Header />
       <div style={{ marginTop: '100px' }} className="project-page-design">
         <div className="d-flex justify-content-between m-5">
           <h1>All Projects</h1>
-          <input style={{ width: '300px' }} className='form-control' type="text" placeholder='Search Projects By Languages Used' />
+          <input onChange={e => setSearchKey(e.target.value)} style={{ width: '300px' }} className='form-control' type="text" placeholder='Search Projects By Languages Used' />
         </div>
         <Row className='mt-5 container-fluid'>
-          {allProjects?.length > 0 ? allProjects.map((project,index)=>(
+          {allProjects?.length > 0 ? allProjects.map((project, index) => (
             <Col key={index} sm={12} md={6} lg={4}>
-            <ProjectCard project={project} />
-          </Col>
-          )):
+              <ProjectCard project={project} />
+            </Col>
+          )) :
             <div className="text-danger fs-4 fw-bolder">Nothing to display!!!</div>
           }
         </Row>

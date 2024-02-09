@@ -1,11 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import UploadProject from '../assets/Images/UploadProject.png'
 import { SERVER_URL } from '../Services/serverUrl';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { editProjectAPI } from '../Services/allAPIs';
+import { editProjectResponseContext } from '../Context API/ContextShare';
+
 
 function EditProject({ project }) {
+  const { editProjectResponse, setEditProjectResponse } = useContext(editProjectResponseContext)
+
   console.log(project);
   const [projectData, setProjectData] = useState({
     id: project._id,
@@ -44,8 +49,8 @@ function EditProject({ project }) {
     })
   }
 
-  const handleUpdate = () => {
-    const { title, languages, overview, github, website, projectImage } = projectData
+  const handleUpdate = async () => {
+    const { id, title, languages, overview, github, website, projectImage } = projectData
     if (!title || !languages || !overview || !github || !website) {
       toast.info("Please fill the form completely!!!")
     } else {
@@ -61,20 +66,29 @@ function EditProject({ project }) {
       const token = sessionStorage.getItem('token')
       console.log(token);
       if (token) {
-        if (preview) {
-          const reqHeader = {
-            "Content-Type": "multipart/form-data",
-            "Authorization": `Bearer ${token}`
+
+        const reqHeader = {
+          "Content-Type": preview ? "multipart/form-data" : "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+        // api call
+        try {
+          const result = await editProjectAPI(id, reqBody, reqHeader)
+          console.log(result);
+          if (result.status === 200) {
+
+            handleClose()
+            setEditProjectResponse(result.data)
+          } else {
+            toast.warning(result.response.data)
           }
-          // api call
-        } else {
-          const reqHeader = {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          }
-        } 
+        } catch (err) {
+          console.log(err);
+        }
       }
     }
+
+
   }
 
   return (

@@ -10,7 +10,7 @@ import { addProjectResponseContext } from '../Context API/ContextShare';
 
 function AddProject() {
   // get context
-  const {addProjectResponse,setAddProjectResponse} = useContext(addProjectResponseContext)
+  const { addProjectResponse, setAddProjectResponse } = useContext(addProjectResponseContext)
   const [preview, setPreview] = useState()
   const [fileStatus, setFileStatus] = useState(false)
   const [show, setShow] = useState(false)
@@ -70,7 +70,7 @@ function AddProject() {
         const reqHeader = {
           "Content-Type": "multipart/form-data",
           "Authorization": `Bearer ${token}`
-        
+
         }
         // api call 
         try {
@@ -80,7 +80,7 @@ function AddProject() {
             console.log(result.data);
             handleClose()
             setAddProjectResponse(result.data)
-            
+
           } else {
             toast.warning(result.response.data)
           }

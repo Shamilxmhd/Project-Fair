@@ -12,7 +12,7 @@ export const loginAPI = async (user) => {
 }
 // add Project API
 export const addProjectAPI = async (reqBody, reqHeader) => {
-    return await commonAPI("POST", `${SERVER_URL}/add-projects`, reqBody, reqHeader)
+    return await commonAPI("POST", `${SERVER_URL}/add-project`, reqBody, reqHeader)
 }
 
 
@@ -23,11 +23,20 @@ export const getHomeProjectAPI = async () => {
 }
 
 // allproject API
-export const getAllProjectAPI = async (reqHeader) => {
-    return await commonAPI("GET", `${SERVER_URL}/all-projects`, '', reqHeader)
+export const getAllProjectAPI = async (searchKey, reqHeader) => {
+    return await commonAPI("GET", `${SERVER_URL}/all-projects?search=${searchKey}`, '', reqHeader)
 }
 
 // userproject API
 export const getUserProjectAPI = async (reqHeader) => {
     return await commonAPI("GET", `${SERVER_URL}/user-projects`, '', reqHeader)
+}
+
+// edit project API
+export const editProjectAPI = async (id, reqBody, reqHeader) => {
+    return await commonAPI("PUT", `${SERVER_URL}/project/edit/${id}`, reqBody, reqHeader)
+}
+// project remove API
+export const deleteProjectAPI = async (id, reqHeader) => {
+    return await commonAPI("DELETE", `${SERVER_URL}/project/remove/${id}`, {}, reqHeader)
 }
