@@ -10,7 +10,7 @@ import { tokenAuthenticationContext } from '../Context API/TokenAuth';
 
 
 function Auth({ insideRegister }) {
-  const {isAuthorised,setIsAuthorised} = useContext(tokenAuthenticationContext)
+  const { isAuthorised, setIsAuthorised } = useContext(tokenAuthenticationContext)
   const [loginStatus, setLoginStatus] = useState(false)
   const navigate = useNavigate()
   const [userData, setUserData] = useState({
@@ -61,6 +61,7 @@ function Auth({ insideRegister }) {
           setLoginStatus(true)
           sessionStorage.setItem("username", result.data.existingUser.username)
           sessionStorage.setItem("token", result.data.token)
+          sessionStorage.setItem("userDetails", JSON.stringify(result.data.existingUser))
           setIsAuthorised(true)
           setTimeout(() => {
             setUserData({ email: '', password: '' })
